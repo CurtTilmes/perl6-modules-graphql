@@ -5,30 +5,30 @@ use LibCurl::HTTP :subs;
 use LibYAML;
 use JSON::Fast;
 
-my $r = Redis::Async.new('localhost:6379');
+my $r = Redis::Async.new;
 
 sub MAIN()
 {
     for jget('https://modules.perl6.org/.json')<dists>.list -> $dist
     {
-        $r.sadd("authors", $dist<author_id>, :async);
-        $r.sadd("dists", $dist<name>, :async);
+        $r.sadd("authors", $dist<author_id>);
+        $r.sadd("dists", $dist<name>);
 
-        $r.setnx("dist:$dist<name>", to-json($dist), :async);
+        $r.setnx("dist:$dist<name>", to-json($dist));
 
         my $author-rec = { author_id => $dist<author_id> };
-        $r.setnx("author:$dist<author_id>", to-json($author-rec), :async);
+        $r.setnx("author:$dist<author_id>", to-json($author-rec));
 
-        $r.sadd("author-dist:$dist<author_id>", $dist<name>, :async);
+        $r.sadd("author-dist:$dist<author_id>", $dist<name>);
 
         for $dist<tags>.list -> $tag
         {
-            $r.sadd("tags", $tag, :async);
+            $r.sadd("tags", $tag);
 
             my $tag-rec = { tag => $tag };
-            $r.setnx("tag:$tag", to-json($tag-rec), :async);
+            $r.setnx("tag:$tag", to-json($tag-rec));
 
-            $r.sadd("tag-dist:$tag", $dist<name>, :async);
+            $r.sadd("tag-dist:$tag", $dist<name>);
         }
     }
 }
