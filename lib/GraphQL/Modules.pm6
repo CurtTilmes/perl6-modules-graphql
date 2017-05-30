@@ -17,13 +17,13 @@ class Model
     { $r.smembers('tags') }
 
     method author($author_id)
-    { from-json $r.get("author:$author_id") }
+    { from-json ($r.get("author:$author_id") or return) }
 
     method distribution($name)
-    { from-json $r.get("dist:$name") }
+    { from-json ($r.get("dist:$name") or return) }
 
     method tag($tag)
-    { from-json $r.get("tag:$tag") }
+    { from-json ($r.get("tag:$tag") or return) }
 
     method author-distributions($author_id)
     { $r.smembers("author-dist:$author_id") }
