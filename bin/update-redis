@@ -2,7 +2,6 @@
 
 use Redis::Async;
 use LibCurl::HTTP :subs;
-use LibYAML;
 use JSON::Fast;
 
 my $r = Redis::Async.new;
